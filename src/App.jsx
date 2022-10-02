@@ -1,10 +1,62 @@
+import { useState } from "react";
 import "./App.css";
 
+const key = import.meta.env.VITE_API_KEY;
+const url = (inputValue) =>
+  `https://www.googleapis.com/youtube/v3/videos?id=${inputValue}&key=${key}&part=snippet,contentDetails,statistics,status`;
+
 function App() {
+  const [inputValue, setInputValue] = useState("");
+  const [loader, setLoader] = useState(false);
+  const [data, setData] = useState([]);
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    const currentUrl = url(inputValue);
+
+    setLoader(true);
+    try {
+      // const sleep = await new Promise((r) => setTimeout(r, 1300));
+      const resp = await fetch(currentUrl);
+      const responseData = await resp.json();
+
+      if (responseData.items.length) {
+        setData((data) => [...data, responseData]);
+        setInputValue("");
+      } else {
+        setError(`Video doesn't exist`);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    setLoader(false);
+  };
+
+  console.log("data", data);
+  console.log("data items", data.items);
+
   return (
     <div className="App">
       <h2> Yt-Dēta </h2>
       <p> Your goto app for extracting the data of Youtube Videos </p>
+
+      <form onSubmit={submitHandler}>
+        <input
+          className="input"
+          type="text"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+        />
+        <button type="submit"> Show Data </button>
+      </form>
+
+      {loader && <h3> LOADING..... </h3>}
+
+      <section>
+        {data.map((video) => {
+          return <h4>{video.items[0].snippet.title}</h4>;
+        })}
+      </section>
     </div>
   );
 }
