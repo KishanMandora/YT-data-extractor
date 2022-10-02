@@ -1,5 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
+import Highlight, { defaultProps } from "prism-react-renderer";
+import theme from "prism-react-renderer/themes/nightOwl";
 import "./App.css";
 
 const key = import.meta.env.VITE_API_KEY;
@@ -32,6 +34,32 @@ function App() {
     setLoader(false);
   };
 
+  const dataStr = data.reduce((prev, curr, index) => {
+    console.log("index", index);
+
+    if (data.length - 1 === index) {
+      console.log("yess");
+      return (
+        prev +
+        `
+    {
+      title: ${curr.items[0].snippet.title}
+    }
+      `
+      );
+    }
+    console.log("noo");
+
+    return (
+      prev +
+      `
+    {
+      title: ${curr.items[0].snippet.title}
+    },
+    `
+    );
+  }, ``);
+
   console.log("data", data);
   console.log("data items", data.items);
 
@@ -57,6 +85,25 @@ function App() {
           return <h4>{video.items[0].snippet.title}</h4>;
         })}
       </section>
+
+      <Highlight
+        {...defaultProps}
+        code={dataStr}
+        theme={theme}
+        language="javascript"
+      >
+        {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={className} style={style}>
+            {tokens.map((line, i) => (
+              <div {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  <span {...getTokenProps({ token, key })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
     </div>
   );
 }
