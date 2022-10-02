@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState } from "react";
 import "./App.css";
 
@@ -17,8 +18,7 @@ function App() {
     setLoader(true);
     try {
       // const sleep = await new Promise((r) => setTimeout(r, 1300));
-      const resp = await fetch(currentUrl);
-      const responseData = await resp.json();
+      const { data: responseData } = await axios.get(currentUrl);
 
       if (responseData.items.length) {
         setData((data) => [...data, responseData]);
