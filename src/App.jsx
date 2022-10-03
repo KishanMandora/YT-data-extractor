@@ -60,10 +60,19 @@ function App() {
     );
   }, ``);
 
+  const renderStr = `
+  [
+    ${dataStr}
+  ]
+  `;
+
   const copyToBoard = async () => {
     console.log("copy please");
     await navigator.clipboard.writeText(dataStr);
   };
+
+  const blob = new Blob([dataStr], { type: "text/javascript" });
+  const href = URL.createObjectURL(blob);
 
   console.log("data", data);
   console.log("data items", data.items);
@@ -92,11 +101,14 @@ function App() {
       </section>
 
       <button onClick={copyToBoard}> Copy JSON </button>
+      <a href={href} download="data.js">
+        Download
+      </a>
 
       {dataStr && (
         <Highlight
           {...defaultProps}
-          code={dataStr}
+          code={renderStr}
           theme={theme}
           language="javascript"
         >
