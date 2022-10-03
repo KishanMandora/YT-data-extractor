@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Highlight, { defaultProps } from "prism-react-renderer";
 import theme from "prism-react-renderer/themes/nightOwl";
 import "./App.css";
@@ -26,7 +26,7 @@ function App() {
         setData((data) => [...data, responseData]);
         setInputValue("");
       } else {
-        setError(`Video doesn't exist`);
+        // setError(`Video doesn't exist`);
       }
     } catch (error) {
       console.log(error);
@@ -43,7 +43,7 @@ function App() {
         prev +
         `
     {
-      title: ${curr.items[0].snippet.title}
+      title: "${curr.items[0].snippet.title}"
     }
       `
       );
@@ -54,11 +54,16 @@ function App() {
       prev +
       `
     {
-      title: ${curr.items[0].snippet.title}
+      title: "${curr.items[0].snippet.title}"
     },
     `
     );
   }, ``);
+
+  const copyToBoard = async () => {
+    console.log("copy please");
+    await navigator.clipboard.writeText(dataStr);
+  };
 
   console.log("data", data);
   console.log("data items", data.items);
@@ -86,24 +91,28 @@ function App() {
         })}
       </section>
 
-      <Highlight
-        {...defaultProps}
-        code={dataStr}
-        theme={theme}
-        language="javascript"
-      >
-        {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className} style={style}>
-            {tokens.map((line, i) => (
-              <div {...getLineProps({ line, key: i })}>
-                {line.map((token, key) => (
-                  <span {...getTokenProps({ token, key })} />
-                ))}
-              </div>
-            ))}
-          </pre>
-        )}
-      </Highlight>
+      <button onClick={copyToBoard}> Copy JSON </button>
+
+      {dataStr && (
+        <Highlight
+          {...defaultProps}
+          code={dataStr}
+          theme={theme}
+          language="javascript"
+        >
+          {({ className, style, tokens, getLineProps, getTokenProps }) => (
+            <pre className={className} style={style}>
+              {tokens.map((line, i) => (
+                <div {...getLineProps({ line, key: i })}>
+                  {line.map((token, key) => (
+                    <span {...getTokenProps({ token, key })} />
+                  ))}
+                </div>
+              ))}
+            </pre>
+          )}
+        </Highlight>
+      )}
     </div>
   );
 }
