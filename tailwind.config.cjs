@@ -2,7 +2,12 @@
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        kanit: ["Kanit"],
+        dirt: ["Rubik Dirt"],
+      },
+    },
   },
   plugins: [require("daisyui")],
   daisyui: {
