@@ -130,7 +130,10 @@ function App() {
         })}
       </section>
 
-      <button onClick={copyToBoard}> Copy JS</button>
+      <button onClick={copyToBoard} className="btn">
+        {" "}
+        Copy JS
+      </button>
       <a href={href} download="data.js">
         Download js
       </a>
