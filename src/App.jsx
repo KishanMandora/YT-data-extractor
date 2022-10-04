@@ -1,12 +1,10 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
-import Highlight, { defaultProps } from "prism-react-renderer";
-import theme from "prism-react-renderer/themes/nightOwl";
+import { useState } from "react";
+import { Header } from "./Components/Header";
+import { Form } from "./Components/Form";
+import { DisplayData } from "./Components/DisplayData";
+import { getUrl } from "./helpers/getUrl";
 import "./App.css";
-
-const key = import.meta.env.VITE_API_KEY;
-const createUrl = (inputValue) =>
-  `https://www.googleapis.com/youtube/v3/videos?id=${inputValue}&key=${key}&part=snippet,contentDetails,statistics,status`;
 
 function App() {
   const [inputValue, setInputValue] = useState("");
@@ -17,21 +15,7 @@ function App() {
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    const originalLink = inputValue.includes("youtube");
-    const shortLink = inputValue.includes("youtu.be");
-    let youtubeId;
-
-    if (originalLink) {
-      const spiltLink = inputValue.split("v=");
-      youtubeId = spiltLink[1];
-    } else if (shortLink) {
-      const spiltLink = inputValue.split("be/");
-      youtubeId = spiltLink[1];
-    }
-
-    const currentUrl = createUrl(youtubeId);
-    console.log("id ", youtubeId);
-    console.log("url ", currentUrl);
+    const currentUrl = getUrl(inputValue);
 
     setLoader(true);
     try {
@@ -52,112 +36,18 @@ function App() {
     setLoader(false);
   };
 
-  const dataStr = data.reduce((prev, curr, index) => {
-    // console.log("index", index);
-
-    if (data.length - 1 === index) {
-      // console.log("yess");
-      return (
-        prev +
-        `
-    {
-      title: "${curr.items[0].snippet.title}"
-    }
-      `
-      );
-    }
-    // console.log("noo");
-
-    return (
-      prev +
-      `
-    {
-      title: "${curr.items[0].snippet.title}"
-    },
-    `
-    );
-  }, ``);
-
-  const renderStr = `
-  [
-    ${dataStr}
-  ]
-  `;
-
-  const copyToBoard = async () => {
-    // console.log("copy please");
-    await navigator.clipboard.writeText(dataStr);
-  };
-
-  const isDisabled = () => {
-    const regex = new RegExp(
-      "^(http(s)?://)?((w){3}.)?youtu(be|.be)?(.com)?/.+"
-    );
-
-    const isValidUrl = regex.test(inputValue);
-    return isValidUrl ? false : true;
-  };
-
-  const blob = new Blob([dataStr], { type: "text/javascript" });
-  const href = URL.createObjectURL(blob);
-
-  // console.log("data", data);
-  // console.log("data items", data.items);
-
   return (
     <div className="App">
-      <h2> Yt-Dēta </h2>
-      <p> Your goto app for extracting the data of Youtube Videos </p>
-
-      <form onSubmit={submitHandler}>
-        <input
-          className="input"
-          type="text"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-        />
-        <button type="submit" disabled={isDisabled()}>
-          Show Data
-        </button>
-      </form>
-
+      <Header />
+      <Form
+        inputValue={inputValue}
+        setInputValue={setInputValue}
+        submitHandler={submitHandler}
+      />
       {loader && <h3> LOADING..... </h3>}
       {error && <h3> {error} </h3>}
 
-      <section>
-        {data.map((video) => {
-          return <h4>{video.items[0].snippet.title}</h4>;
-        })}
-      </section>
-
-      <button onClick={copyToBoard} className="btn">
-        {" "}
-        Copy JS
-      </button>
-      <a href={href} download="data.js">
-        Download js
-      </a>
-
-      {dataStr && (
-        <Highlight
-          {...defaultProps}
-          code={renderStr}
-          theme={theme}
-          language="javascript"
-        >
-          {({ className, style, tokens, getLineProps, getTokenProps }) => (
-            <pre className={className} style={style}>
-              {tokens.map((line, i) => (
-                <div {...getLineProps({ line, key: i })}>
-                  {line.map((token, key) => (
-                    <span {...getTokenProps({ token, key })} />
-                  ))}
-                </div>
-              ))}
-            </pre>
-          )}
-        </Highlight>
-      )}
+      <DisplayData data={data} />
     </div>
   );
 }
