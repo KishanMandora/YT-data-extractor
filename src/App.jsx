@@ -12,6 +12,7 @@ function App() {
   const [inputValue, setInputValue] = useState("");
   const [loader, setLoader] = useState(false);
   const [data, setData] = useState([]);
+  const [error, setError] = useState(null);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -39,13 +40,15 @@ function App() {
 
       if (responseData.items.length) {
         setData((data) => [...data, responseData]);
-        setInputValue("");
+        setError(null);
       } else {
-        // setError(`Video doesn't exist`);
+        setError(`Please enter a valid URL`);
       }
     } catch (error) {
       console.log(error);
     }
+
+    setInputValue("");
     setLoader(false);
   };
 
@@ -113,15 +116,13 @@ function App() {
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
         />
-        <button
-          type="submit"
-          // disabled={isDisabled()}
-        >
+        <button type="submit" disabled={isDisabled()}>
           Show Data
         </button>
       </form>
 
       {loader && <h3> LOADING..... </h3>}
+      {error && <h3> {error} </h3>}
 
       <section>
         {data.map((video) => {
