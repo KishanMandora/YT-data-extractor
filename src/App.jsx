@@ -5,7 +5,7 @@ import theme from "prism-react-renderer/themes/nightOwl";
 import "./App.css";
 
 const key = import.meta.env.VITE_API_KEY;
-const url = (inputValue) =>
+const createUrl = (inputValue) =>
   `https://www.googleapis.com/youtube/v3/videos?id=${inputValue}&key=${key}&part=snippet,contentDetails,statistics,status`;
 
 function App() {
@@ -15,7 +15,22 @@ function App() {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    const currentUrl = url(inputValue);
+
+    const originalLink = inputValue.includes("youtube");
+    const shortLink = inputValue.includes("youtu.be");
+    let youtubeId;
+
+    if (originalLink) {
+      const spiltLink = inputValue.split("v=");
+      youtubeId = spiltLink[1];
+    } else if (shortLink) {
+      const spiltLink = inputValue.split("be/");
+      youtubeId = spiltLink[1];
+    }
+
+    const currentUrl = createUrl(youtubeId);
+    console.log("id ", youtubeId);
+    console.log("url ", currentUrl);
 
     setLoader(true);
     try {
@@ -35,10 +50,10 @@ function App() {
   };
 
   const dataStr = data.reduce((prev, curr, index) => {
-    console.log("index", index);
+    // console.log("index", index);
 
     if (data.length - 1 === index) {
-      console.log("yess");
+      // console.log("yess");
       return (
         prev +
         `
@@ -48,7 +63,7 @@ function App() {
       `
       );
     }
-    console.log("noo");
+    // console.log("noo");
 
     return (
       prev +
@@ -67,15 +82,24 @@ function App() {
   `;
 
   const copyToBoard = async () => {
-    console.log("copy please");
+    // console.log("copy please");
     await navigator.clipboard.writeText(dataStr);
+  };
+
+  const isDisabled = () => {
+    const regex = new RegExp(
+      "^(http(s)?://)?((w){3}.)?youtu(be|.be)?(.com)?/.+"
+    );
+
+    const isValidUrl = regex.test(inputValue);
+    return isValidUrl ? false : true;
   };
 
   const blob = new Blob([dataStr], { type: "text/javascript" });
   const href = URL.createObjectURL(blob);
 
-  console.log("data", data);
-  console.log("data items", data.items);
+  // console.log("data", data);
+  // console.log("data items", data.items);
 
   return (
     <div className="App">
@@ -89,7 +113,12 @@ function App() {
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
         />
-        <button type="submit"> Show Data </button>
+        <button
+          type="submit"
+          // disabled={isDisabled()}
+        >
+          Show Data
+        </button>
       </form>
 
       {loader && <h3> LOADING..... </h3>}
@@ -100,9 +129,9 @@ function App() {
         })}
       </section>
 
-      <button onClick={copyToBoard}> Copy JSON </button>
+      <button onClick={copyToBoard}> Copy JS</button>
       <a href={href} download="data.js">
-        Download
+        Download js
       </a>
 
       {dataStr && (
