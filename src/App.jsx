@@ -5,6 +5,7 @@ import { Form } from "./Components/Form";
 import { DisplayData } from "./Components/DisplayData";
 import { getUrl } from "./helpers/getUrl";
 import "./App.css";
+import { Toast } from "./Components/Toast";
 
 function App() {
   const [inputValue, setInputValue] = useState("");
@@ -25,15 +26,19 @@ function App() {
       if (responseData.items.length) {
         setData((data) => [...data, responseData]);
         setError(null);
+        setLoader(false);
       } else {
-        setError(`Please enter a valid URL`);
+        setError({ msg: `Please enter a valid URL`, type: "error" });
+        setLoader(false);
+        const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+        await sleep(3000);
+        setError(null);
       }
     } catch (error) {
       console.log(error);
     }
 
     setInputValue("");
-    setLoader(false);
   };
 
   return (
@@ -45,7 +50,7 @@ function App() {
         submitHandler={submitHandler}
       />
       {loader && <h3> LOADING..... </h3>}
-      {error && <h3> {error} </h3>}
+      {error && <Toast msg={error.msg} type={error.type} />}
 
       <DisplayData data={data} />
     </div>
