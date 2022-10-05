@@ -25,8 +25,7 @@ function DisplayData({ data }) {
     );
   }, ``);
 
-  const renderStr = `
-  const data = [
+  const renderStr = `const data = [
     ${dataStr}
   ]
   `;
@@ -43,7 +42,7 @@ function DisplayData({ data }) {
   const isMarkupMode = () => (mode === "markup" ? "" : "btn-outline");
 
   return (
-    <div className="my-2 mx-auto w-4/5">
+    <div className="my-2 mx-auto w-4/5  sm:w-11/12 md:w-4/5">
       <div className="my-4 flex items-center justify-around">
         <div className="flex gap-2">
           <button
@@ -80,7 +79,7 @@ function DisplayData({ data }) {
       </div>
 
       {mode === "visual" && (
-        <section>
+        <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {data.map((video) => {
             return <Card video={video} />;
           })}
