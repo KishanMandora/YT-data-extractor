@@ -12,8 +12,7 @@ function DisplayData({ data }) {
         `
     {
       title: "${curr.items[0].snippet.title}"
-    }
-      `
+    }`
       );
     }
 
@@ -22,8 +21,7 @@ function DisplayData({ data }) {
       `
     {
       title: "${curr.items[0].snippet.title}"
-    },
-    `
+    },`
     );
   }, ``);
 
@@ -47,12 +45,12 @@ function DisplayData({ data }) {
         Visual Mode
       </button>
       <button
-        className="btn btn-secondary btn-outline"
+        className="btn btn-outline btn-secondary"
         onClick={() => setMode("markup")}
       >
         Markup
       </button>
-      <button className="btn btn-secondary btn-outline" onClick={copyToBoard}>
+      <button className="btn btn-outline btn-secondary" onClick={copyToBoard}>
         Copy JS
       </button>
       <a href={href} download="data.js">
