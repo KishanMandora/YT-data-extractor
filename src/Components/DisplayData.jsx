@@ -43,8 +43,8 @@ function DisplayData({ data }) {
 
   return (
     <div className="my-2 mx-auto w-4/5  sm:w-11/12 md:w-4/5">
-      <div className="my-4 flex items-center justify-around">
-        <div className="flex gap-2">
+      <div className="my-4 flex flex-col items-center gap-4 sm:flex-row sm:justify-around">
+        <div className="flex w-full justify-between gap-2 sm:w-auto">
           <button
             className={`btn btn-primary ${isVisualMode()} `}
             onClick={() => setMode("visual")}
@@ -58,7 +58,7 @@ function DisplayData({ data }) {
             Markup
           </button>
         </div>
-        <div className="flex gap-2">
+        <div className="flex w-full justify-between gap-2 sm:w-auto">
           <button className="btn btn-secondary gap-2" onClick={copyToBoard}>
             Copy
             <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24">
