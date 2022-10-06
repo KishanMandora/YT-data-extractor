@@ -1,11 +1,11 @@
 import ReactDOM from "react-dom";
 
 function Toast({ msg, type }) {
-  //   console.log(ReactDOM.createPortal(<h2> lol </h2>));
+  const alertType = type === "success" ? "alert-success" : "alert-error";
 
   return ReactDOM.createPortal(
     <div className="toast toast-start toast-top ">
-      <div className={`alert alert-${type} animate-fade`}>
+      <div className={`alert ${alertType} animate-fade`}>
         <div>
           <span>{msg}</span>
         </div>

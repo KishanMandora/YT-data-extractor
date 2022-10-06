@@ -27,9 +27,11 @@ function App() {
         setData((data) => [...data, responseData]);
         setError(null);
         setLoader(false);
+        setInputValue("");
       } else {
-        setError({ msg: `Please enter a valid URL`, type: "error" });
         setLoader(false);
+        setInputValue("");
+        setError({ msg: `Please enter a valid URL`, type: "error" });
         const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
         await sleep(3000);
         setError(null);
@@ -37,8 +39,6 @@ function App() {
     } catch (error) {
       console.log(error);
     }
-
-    setInputValue("");
   };
 
   return (

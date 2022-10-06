@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Card } from "./Card";
 import { Markup } from "./Markup";
+import { Toast } from "./Toast";
 
 function DisplayData({ data }) {
   const [mode, setMode] = useState("visual");
+  const [toast, setToast] = useState(null);
 
   const dataStr = data.reduce((prev, curr, index) => {
     if (data.length - 1 === index) {
@@ -33,6 +35,18 @@ function DisplayData({ data }) {
   const copyToBoard = async () => {
     await navigator.clipboard.writeText(renderStr);
     console.log("copied");
+
+    setToast({ msg: "Data Copied Successfully", type: "success" });
+    const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+    await sleep(3000);
+    setToast(null);
+  };
+
+  const downloadHandler = async () => {
+    setToast({ msg: "Data Downloaded Successfully", type: "success" });
+    const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+    await sleep(3000);
+    setToast(null);
   };
 
   const blob = new Blob([renderStr], { type: "text/javascript" });
@@ -69,6 +83,7 @@ function DisplayData({ data }) {
             className="btn btn-outline btn-warning gap-2"
             href={href}
             download="data.js"
+            onClick={downloadHandler}
           >
             Download
             <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24">
@@ -87,6 +102,7 @@ function DisplayData({ data }) {
       )}
 
       {mode === "markup" && renderStr && <Markup str={renderStr} />}
+      {toast && <Toast msg={toast.msg} type={toast.type} />}
     </div>
   );
 }
