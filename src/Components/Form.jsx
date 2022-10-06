@@ -32,7 +32,6 @@ function Form({ dispatch, state }) {
           dispatch({ error: null });
         }
       } catch (error) {
-        console.log(error);
         dispatch({
           error: { msg: `${error}`, type: "error" },
         });
@@ -68,7 +67,7 @@ function Form({ dispatch, state }) {
             Delete Data
           </button>
         </div>
-        <div className="mt-4 flex gap-5">
+        {/* <div className="mt-4 flex gap-5">
           <label className="label cursor-pointer gap-3" htmlFor="description">
             <span className="label-text">Description</span>
             <input
@@ -105,7 +104,7 @@ function Form({ dispatch, state }) {
               onChange={() => dispatch({ thumbnails: !state.thumbnails })}
             />
           </label>
-        </div>
+        </div> */}
       </form>
     </div>
   );

@@ -22,7 +22,6 @@ function App() {
     initialValue
   );
 
-  console.log(state, "state");
   useEffect(() => {
     localStorage.setItem("data", JSON.stringify(state.data));
   }, [state.data]);

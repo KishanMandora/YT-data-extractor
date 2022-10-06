@@ -5,7 +5,6 @@ import { Markup } from "./Markup";
 import { Toast } from "./Toast";
 
 function DisplayData({ data }) {
-  console.log(data, "from display");
   const [mode, setMode] = useState("visual");
   const [toast, setToast] = useState(null);
 
