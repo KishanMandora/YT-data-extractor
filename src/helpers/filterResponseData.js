@@ -10,7 +10,9 @@ function filterResponseData(responseData) {
       medium: responseData.items[0].snippet.thumbnails.medium.url,
       high: responseData.items[0].snippet.thumbnails.high.url,
       standard: responseData.items[0].snippet.thumbnails.standard.url,
-      max: responseData.items[0].snippet.thumbnails.maxres.url,
+      max: responseData.items[0].snippet.thumbnails.maxres
+        ? responseData.items[0].snippet.thumbnails.maxres.url
+        : "",
     },
     duration: responseData.items[0].contentDetails.duration,
     views: responseData.items[0].statistics.viewCount,

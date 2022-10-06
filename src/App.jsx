@@ -1,30 +1,40 @@
-import { useState } from "react";
+import { useReducer, useEffect } from "react";
 import { Header } from "./Components/Header";
 import { Form } from "./Components/Form";
 import { DisplayData } from "./Components/DisplayData";
 import "./App.css";
 import { Toast } from "./Components/Toast";
-import { useLocalStorage } from "./Hooks/useLocalStorage";
 import Loader from "./Components/Loader";
 
+const initialValue = {
+  description: true,
+  channelName: true,
+  duration: true,
+  thumbnails: true,
+  error: null,
+  loader: false,
+  data: JSON.parse(localStorage.getItem("data")) || [],
+};
+
 function App() {
-  const [loader, setLoader] = useState(false);
-  const [data, setData] = useLocalStorage("data", []);
-  const [error, setError] = useState(null);
+  const [state, dispatch] = useReducer(
+    (state, action) => ({ ...state, ...action }),
+    initialValue
+  );
+
+  console.log(state, "state");
+  useEffect(() => {
+    localStorage.setItem("data", JSON.stringify(state.data));
+  }, [state.data]);
 
   return (
     <div className="App font-kanit">
       <Header />
-      <Form
-        setLoader={setLoader}
-        setData={setData}
-        setError={setError}
-        data={data}
-      />
-      {loader && <Loader />}
-      {error && <Toast msg={error.msg} type={error.type} />}
+      <Form dispatch={dispatch} state={state} />
+      {state.loader && <Loader />}
+      {state.error && <Toast msg={state.error.msg} type={state.error.type} />}
 
-      <DisplayData data={data} />
+      <DisplayData data={state.data} />
     </div>
   );
 }
