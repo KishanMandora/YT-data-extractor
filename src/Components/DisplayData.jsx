@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { createMarkupStr } from "../helpers/createMarkupStr";
 import { Card } from "./Card";
 import { Markup } from "./Markup";
 import { Toast } from "./Toast";
@@ -9,22 +10,10 @@ function DisplayData({ data }) {
 
   const dataStr = data.reduce((prev, curr, index) => {
     if (data.length - 1 === index) {
-      return (
-        prev +
-        `
-    {
-      title: "${curr.items[0].snippet.title}"
-    }`
-      );
+      return createMarkupStr(prev, curr);
     }
 
-    return (
-      prev +
-      `
-    {
-      title: "${curr.items[0].snippet.title}"
-    },`
-    );
+    return createMarkupStr(prev, curr) + ",";
   }, ``);
 
   const renderStr = `const data = [
