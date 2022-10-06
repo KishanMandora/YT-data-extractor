@@ -85,7 +85,7 @@ function DisplayData({ data }) {
       {mode === "visual" && (
         <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {data.map((video) => {
-            return <Card video={video} />;
+            return <Card key={video.id} video={video} />;
           })}
         </section>
       )}

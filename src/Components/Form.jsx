@@ -1,9 +1,12 @@
 import axios from "axios";
 import { useState } from "react";
+import { filterResponseData } from "../helpers/filterResponseData";
 import { getUrl } from "../helpers/getUrl";
 
 function Form({ setData, setError, setLoader, data }) {
   const [inputValue, setInputValue] = useState("");
+
+  console.log(data);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -19,7 +22,8 @@ function Form({ setData, setError, setLoader, data }) {
         // const sleep = await new Promise((r) => setTimeout(r, 1300));
         const { data: responseData } = await axios.get(currentUrl);
         if (responseData.items.length) {
-          setData((data) => [...data, responseData]);
+          const neededData = filterResponseData(responseData);
+          setData((data) => [...data, neededData]);
           setError(null);
           setLoader(false);
           setInputValue("");
