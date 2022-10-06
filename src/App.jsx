@@ -6,11 +6,12 @@ import { DisplayData } from "./Components/DisplayData";
 import { getUrl } from "./helpers/getUrl";
 import "./App.css";
 import { Toast } from "./Components/Toast";
+import { useLocalStorage } from "./Hooks/useLocalStorage";
 
 function App() {
   const [inputValue, setInputValue] = useState("");
   const [loader, setLoader] = useState(false);
-  const [data, setData] = useState([]);
+  const [data, setData] = useLocalStorage("data", []);
   const [error, setError] = useState(null);
 
   const submitHandler = async (e) => {
