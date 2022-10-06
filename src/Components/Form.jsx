@@ -6,14 +6,10 @@ import { getUrl } from "../helpers/getUrl";
 function Form({ setData, setError, setLoader, data }) {
   const [inputValue, setInputValue] = useState("");
 
-  console.log(data);
-
   const submitHandler = async (e) => {
     e.preventDefault();
 
     const urls = inputValue.split(",");
-
-    console.log(urls);
 
     for (let i = 0; i < urls.length; i++) {
       const currentUrl = getUrl(urls[i].trim());

@@ -1,5 +1,4 @@
 function Card({ video }) {
-  console.log();
   return (
     <div className="grid grid-cols-4 rounded-md bg-neutral  p-4">
       <div>

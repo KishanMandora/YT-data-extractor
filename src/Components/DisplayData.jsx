@@ -23,8 +23,6 @@ function DisplayData({ data }) {
 
   const copyToBoard = async () => {
     await navigator.clipboard.writeText(renderStr);
-    console.log("copied");
-
     setToast({ msg: "Data Copied Successfully", type: "success" });
     const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
     await sleep(3000);
