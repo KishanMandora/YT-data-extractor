@@ -5,6 +5,7 @@ import { DisplayData } from "./Components/DisplayData";
 import "./App.css";
 import { Toast } from "./Components/Toast";
 import { useLocalStorage } from "./Hooks/useLocalStorage";
+import Loader from "./Components/Loader";
 
 function App() {
   const [loader, setLoader] = useState(false);
@@ -20,7 +21,7 @@ function App() {
         setError={setError}
         data={data}
       />
-      {loader && <h3> LOADING..... </h3>}
+      {loader && <Loader />}
       {error && <Toast msg={error.msg} type={error.type} />}
 
       <DisplayData data={data} />
