@@ -9,35 +9,40 @@ function Form({ dispatch, state }) {
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    const urls = inputValue.split(",");
+    const currentUrl = getUrl(inputValue);
 
-    for (let i = 0; i < urls.length; i++) {
-      const currentUrl = getUrl(urls[i].trim());
+    dispatch({ loader: true });
+    try {
+      const { data: responseData } = await axios.get(currentUrl);
 
-      dispatch({ loader: true });
-      try {
-        const { data: responseData } = await axios.get(currentUrl);
-
-        if (responseData.items.length) {
-          const neededData = filterResponseData(responseData);
-          dispatch({ error: null, data: [...state.data, neededData] });
-          setInputValue("");
-        } else {
-          setInputValue("");
-          dispatch({
-            error: { msg: `${urls[i]} is invalid URL`, type: "error" },
-          });
-          const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-          await sleep(3000);
-          dispatch({ error: null });
-        }
-      } catch (error) {
+      if (responseData.items.length) {
+        const neededData = filterResponseData(responseData);
+        dispatch({ error: null, data: [...state.data, neededData] });
+        setInputValue("");
+      } else {
+        setInputValue("");
         dispatch({
-          error: { msg: `${error}`, type: "error" },
+          error: { msg: `${inputValue} is invalid URL`, type: "error" },
         });
+        const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+        await sleep(3000);
+        dispatch({ error: null });
       }
-      dispatch({ loader: false });
+    } catch (error) {
+      dispatch({
+        error: { msg: `${error}`, type: "error" },
+      });
     }
+    dispatch({ loader: false });
+  };
+
+  const isDisabled = () => {
+    const regex = new RegExp(
+      "^(http(s)?://)?((w){3}.)?youtu(be|.be)?(.com)?/.+"
+    );
+
+    const isValidUrl = regex.test(inputValue);
+    return isValidUrl ? false : true;
   };
 
   const inputChangeHandler = (e) => {
@@ -55,7 +60,11 @@ function Form({ dispatch, state }) {
             value={inputValue}
             onChange={(e) => inputChangeHandler(e)}
           />
-          <button className="btn btn-primary rounded-l-none" type="submit">
+          <button
+            className="btn btn-primary rounded-l-none"
+            type="submit"
+            disabled={isDisabled()}
+          >
             Show Data
           </button>
           <button
