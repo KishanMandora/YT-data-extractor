@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
-import { filterResponseData } from "../helpers/filterResponseData";
-import { getUrl } from "../helpers/getUrl";
+import { structuredResponseData } from "../helpers/helpers";
+import { getUrl, getVideoId, checkForDuplicate } from "../helpers/helpers";
 
 function Form({ dispatch, state }) {
   const [inputValue, setInputValue] = useState("");
@@ -9,14 +9,28 @@ function Form({ dispatch, state }) {
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    const currentUrl = getUrl(inputValue);
+    const videoId = getVideoId(inputValue);
+
+    const isDulicate = checkForDuplicate(state.data, videoId);
+
+    if (isDulicate) {
+      setInputValue("");
+      dispatch({
+        error: { msg: `${inputValue} already in the list`, type: "info" },
+      });
+      const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+      await sleep(3000);
+      return dispatch({ error: null });
+    }
+
+    const currentUrl = getUrl(videoId);
 
     dispatch({ loader: true });
     try {
       const { data: responseData } = await axios.get(currentUrl);
 
       if (responseData.items.length) {
-        const neededData = filterResponseData(responseData);
+        const neededData = structuredResponseData(responseData);
         dispatch({ error: null, data: [...state.data, neededData] });
         setInputValue("");
       } else {
@@ -29,6 +43,7 @@ function Form({ dispatch, state }) {
         dispatch({ error: null });
       }
     } catch (error) {
+      console.log(error);
       dispatch({
         error: { msg: `${error}`, type: "error" },
       });
