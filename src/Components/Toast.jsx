@@ -1,29 +1,50 @@
+import { useState } from "react";
 import ReactDOM from "react-dom";
+import { toastPubSub } from "../helpers/pubSub";
 
-function Toast({ msg, type }) {
-  const alertType = (type) => {
-    switch (type) {
-      case "success":
-        return "alert-success";
-      case "error":
-        return "alert-error";
-      case "info":
-        return "alert-info";
-      default:
-        return "";
-    }
-  };
+function toast(msg, type) {
+  return toastPubSub.publish({
+    id: Math.random(),
+    msg,
+    type,
+  });
+}
 
+function ToastComp() {
+  const [toasts, setToasts] = useState([]);
+
+  toastPubSub.subscribe((data) => {
+    setToasts((prev) => [...prev, data]);
+    setTimeout(() => {
+      setToasts((prev) => {
+        const [, ...arr] = prev;
+        return arr;
+      });
+    }, 3000);
+  });
+
+  return (
+    <div className="toast toast-start toast-top">
+      {Boolean(toasts.length) &&
+        toasts.map(({ id, msg, type }) => {
+          return (
+            <div className={`alert alert-${type} animate-fade`} key={id}>
+              <div>
+                <span>{msg}</span>
+              </div>
+            </div>
+          );
+        })}
+    </div>
+  );
+}
+
+function Toast() {
   return ReactDOM.createPortal(
-    <div className="toast toast-start toast-top ">
-      <div className={`alert ${alertType(type)} animate-fade`}>
-        <div>
-          <span>{msg}</span>
-        </div>
-      </div>
-    </div>,
+    <ToastComp />,
     document.getElementById("portal")
   );
 }
 
-export { Toast };
+export default Toast;
+export { toast };

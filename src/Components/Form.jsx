@@ -1,7 +1,9 @@
 import axios from "axios";
+import { info } from "daisyui/src/colors";
 import { useState } from "react";
 import { structuredResponseData } from "../helpers/helpers";
 import { getUrl, getVideoId, checkForDuplicate } from "../helpers/helpers";
+import { toast } from "./Toast";
 
 function Form({ dispatch, state }) {
   const [inputValue, setInputValue] = useState("");
@@ -15,12 +17,7 @@ function Form({ dispatch, state }) {
 
     if (isDulicate) {
       setInputValue("");
-      dispatch({
-        error: { msg: `${inputValue} already in the list`, type: "info" },
-      });
-      const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-      await sleep(3000);
-      return dispatch({ error: null });
+      return toast(`${inputValue} already in the list`, "info");
     }
 
     const currentUrl = getUrl(videoId);
@@ -35,12 +32,7 @@ function Form({ dispatch, state }) {
         setInputValue("");
       } else {
         setInputValue("");
-        dispatch({
-          error: { msg: `${inputValue} is invalid URL`, type: "error" },
-        });
-        const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-        await sleep(3000);
-        dispatch({ error: null });
+        toast(`${inputValue} is invalid URL`, "error");
       }
     } catch (error) {
       console.log(error);
