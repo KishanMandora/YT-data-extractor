@@ -9,7 +9,15 @@ function Card({ video }) {
         />
       </div>
       <div className="col-span-3 ml-4">
-        <span className="block text-lg">{video.title} </span>
+        <span className="block text-lg">
+          <a
+            className="link link-hover"
+            href={`https://www.youtube.com/watch?v=${video.id}`}
+            target="blank"
+          >
+            {video.title}
+          </a>
+        </span>
         <span className="mt-2 text-sm">by: {video.channelTitle}</span>
       </div>
     </div>
