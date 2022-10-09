@@ -64,4 +64,19 @@ function structuredResponseData(responseData, comments) {
   };
 }
 
-export { getUrl, getVideoId, checkForDuplicate, structuredResponseData };
+function alertType(type) {
+  return type === "success"
+    ? "alert-success"
+    : type === "info"
+    ? "alert-info"
+    : type === "error"
+    ? "alert-error"
+    : "";
+}
+export {
+  getUrl,
+  getVideoId,
+  checkForDuplicate,
+  structuredResponseData,
+  alertType,
+};

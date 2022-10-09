@@ -1,5 +1,6 @@
 import { useState } from "react";
 import ReactDOM from "react-dom";
+import { alertType } from "../helpers/helpers";
 import { toastPubSub } from "../helpers/pubSub";
 
 function toast(msg, type) {
@@ -27,9 +28,8 @@ function ToastComp() {
     <div className="toast toast-start toast-top">
       {Boolean(toasts.length) &&
         toasts.map(({ id, msg, type }) => {
-          const alertType = `alert-${type}`;
           return (
-            <div className={`alert ${alertType} animate-fade`} key={id}>
+            <div className={`alert ${alertType(type)} animate-fade`} key={id}>
               <div>
                 <span>{msg}</span>
               </div>
