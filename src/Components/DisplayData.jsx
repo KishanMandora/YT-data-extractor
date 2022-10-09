@@ -4,7 +4,7 @@ import { Card } from "./Card";
 import { Markup } from "./Markup";
 import { toast } from "./Toast";
 
-function DisplayData({ data }) {
+function DisplayData({ data, dispatch }) {
   const [mode, setMode] = useState("visual");
 
   const dataStr = data.reduce((prev, curr, index) => {
@@ -76,7 +76,14 @@ function DisplayData({ data }) {
       {mode === "visual" && (
         <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {data.map((video) => {
-            return <Card key={video.id} video={video} />;
+            return (
+              <Card
+                key={video.id}
+                video={video}
+                dispatch={dispatch}
+                data={data}
+              />
+            );
           })}
         </section>
       )}

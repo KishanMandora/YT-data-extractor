@@ -30,7 +30,7 @@ function App() {
       <Form dispatch={dispatch} state={state} />
       {state.loader && <Loader />}
 
-      <DisplayData data={state.data} />
+      <DisplayData data={state.data} dispatch={dispatch} />
     </div>
   );
 }
