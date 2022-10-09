@@ -1,3 +1,16 @@
+const commentsStr = (comments) =>
+  comments.reduce((prev, curr) => {
+    return (
+      prev +
+      `
+  {
+    commentId: "${curr.commentId}",
+    comment: "${curr.comment}"
+  },
+  `
+    );
+  }, ``);
+
 const createMarkupStr = (prev, curr) => {
   return (
     prev +
@@ -18,6 +31,8 @@ const createMarkupStr = (prev, curr) => {
       max:  "${curr.thumbnails.max}",
     },
     description:  "${curr.description}",
+    comments:[  ${commentsStr(curr.comments)}
+    ]
   }`
   );
 };
