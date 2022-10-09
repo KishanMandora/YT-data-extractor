@@ -64,10 +64,4 @@ function structuredResponseData(responseData, comments) {
   };
 }
 
-export {
-  getUrl,
-  getVideoId,
-  checkForDuplicate,
-  structuredResponseData,
-  alertType,
-};
+export { getUrl, getVideoId, checkForDuplicate, structuredResponseData };

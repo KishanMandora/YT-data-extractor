@@ -1,6 +1,5 @@
 import { useState } from "react";
 import ReactDOM from "react-dom";
-import { alertType } from "../helpers/helpers";
 import { toastPubSub } from "../helpers/pubSub";
 
 function toast(msg, type) {
