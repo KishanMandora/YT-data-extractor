@@ -12,26 +12,41 @@ const commentsStr = (comments) =>
   }, ``);
 
 const createMarkupStr = (prev, curr) => {
+  const {
+    id,
+    duration,
+    title,
+    channelId,
+    channelTitle,
+    likes,
+    views,
+    thumbnails,
+    description,
+    comments,
+  } = curr;
+
+  const { max, standard, high, medium } = thumbnails;
+
   return (
     prev +
     `
   {
-    id: "${curr.id}",
-    title: "${curr.title}",
-    channelName: "${curr.channelTitle}",
-    channelId:  "${curr.channelId}",
-    duration:  "${curr.duration}",
-    views:  "${curr.views}",
-    likes:  "${curr.likes}",
+    id: "${id}",
+    title: "${title}",
+    channelName: "${channelTitle}",
+    channelId:  "${channelId}",
+    duration:  "${duration}",
+    views:  "${views}",
+    likes:  "${likes}",
     thumbnails: {
-      default:  "${curr.thumbnails.default}",
-      medium:  "${curr.thumbnails.medium}",
-      high:  "${curr.thumbnails.high}",
-      standard:  "${curr.thumbnails.standard}",
-      max:  "${curr.thumbnails.max}",
+      default:  "${thumbnails.default}",
+      medium:  "${medium}",
+      high:  "${high}",
+      standard:  "${standard}",
+      max:  "${max}",
     },
-    description:  "${curr.description}",
-    comments:[  ${commentsStr(curr.comments)}
+    description:  "${description}",
+    comments:[  ${commentsStr(comments)}
     ]
   }`
   );

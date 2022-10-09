@@ -64,15 +64,6 @@ function structuredResponseData(responseData, comments) {
   };
 }
 
-function alertType(type) {
-  return type === "success"
-    ? "alert-success"
-    : type === "info"
-    ? "alert-info"
-    : type === "error"
-    ? "alert-error"
-    : "";
-}
 export {
   getUrl,
   getVideoId,

@@ -29,7 +29,7 @@ function ToastComp() {
       {Boolean(toasts.length) &&
         toasts.map(({ id, msg, type }) => {
           return (
-            <div className={`alert ${alertType(type)} animate-fade`} key={id}>
+            <div className={`alert toast-${type} animate-fade`} key={id}>
               <div>
                 <span>{msg}</span>
               </div>
