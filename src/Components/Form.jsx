@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { structuredResponseData } from "../helpers/helpers";
 import { getUrl, getVideoId, checkForDuplicate } from "../helpers/helpers";
+import { toast } from "./Toast";
 
 function Form({ dispatch, state }) {
   const [inputValue, setInputValue] = useState("");
@@ -15,39 +16,33 @@ function Form({ dispatch, state }) {
 
     if (isDulicate) {
       setInputValue("");
-      dispatch({
-        error: { msg: `${inputValue} already in the list`, type: "info" },
-      });
-      const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-      await sleep(3000);
-      return dispatch({ error: null });
+      return toast(`${inputValue} already in the list`, "info");
     }
 
-    const currentUrl = getUrl(videoId);
+    const { videoDetailsUrl, commentsUrl } = getUrl(videoId);
 
     dispatch({ loader: true });
     try {
-      const { data: responseData } = await axios.get(currentUrl);
+      const [
+        { data: responseData },
+        {
+          data: { items: comments },
+        },
+      ] = await Promise.all([
+        axios.get(videoDetailsUrl),
+        axios.get(commentsUrl),
+      ]);
 
-      if (responseData.items.length) {
-        const neededData = structuredResponseData(responseData);
-        dispatch({ error: null, data: [...state.data, neededData] });
-        setInputValue("");
-      } else {
-        setInputValue("");
-        dispatch({
-          error: { msg: `${inputValue} is invalid URL`, type: "error" },
-        });
-        const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-        await sleep(3000);
-        dispatch({ error: null });
-      }
+      const neededData = structuredResponseData(responseData, comments);
+      dispatch({ data: [...state.data, neededData] });
     } catch (error) {
-      console.log(error);
-      dispatch({
-        error: { msg: `${error}`, type: "error" },
-      });
+      if (error.response.status === 404) {
+        toast(`${inputValue} is invalid URL`, "error");
+      } else {
+        toast(`Some error occurred, please try again`, "error");
+      }
     }
+    setInputValue("");
     dispatch({ loader: false });
   };
 

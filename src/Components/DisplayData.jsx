@@ -2,11 +2,10 @@ import { useState } from "react";
 import { createMarkupStr } from "../helpers/createMarkupStr";
 import { Card } from "./Card";
 import { Markup } from "./Markup";
-import { Toast } from "./Toast";
+import { toast } from "./Toast";
 
-function DisplayData({ data }) {
+function DisplayData({ data, dispatch }) {
   const [mode, setMode] = useState("visual");
-  const [toast, setToast] = useState(null);
 
   const dataStr = data.reduce((prev, curr, index) => {
     if (data.length - 1 === index) {
@@ -23,17 +22,11 @@ function DisplayData({ data }) {
 
   const copyToBoard = async () => {
     await navigator.clipboard.writeText(renderStr);
-    setToast({ msg: "Data Copied Successfully", type: "success" });
-    const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-    await sleep(3000);
-    setToast(null);
+    toast("Data Copied to Clipboard", "success");
   };
 
-  const downloadHandler = async () => {
-    setToast({ msg: "Data Downloaded Successfully", type: "success" });
-    const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-    await sleep(3000);
-    setToast(null);
+  const downloadHandler = () => {
+    toast("Data Downloaded Successfully", "success");
   };
 
   const blob = new Blob([renderStr], { type: "text/javascript" });
@@ -83,13 +76,19 @@ function DisplayData({ data }) {
       {mode === "visual" && (
         <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {data.map((video) => {
-            return <Card key={video.id} video={video} />;
+            return (
+              <Card
+                key={video.id}
+                video={video}
+                dispatch={dispatch}
+                data={data}
+              />
+            );
           })}
         </section>
       )}
 
       {mode === "markup" && renderStr && <Markup str={renderStr} />}
-      {toast && <Toast msg={toast.msg} type={toast.type} />}
     </div>
   );
 }

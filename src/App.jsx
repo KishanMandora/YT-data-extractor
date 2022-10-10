@@ -3,7 +3,6 @@ import { Header } from "./Components/Header";
 import { Form } from "./Components/Form";
 import { DisplayData } from "./Components/DisplayData";
 import "./App.css";
-import { Toast } from "./Components/Toast";
 import Loader from "./Components/Loader";
 
 const initialValue = {
@@ -11,7 +10,6 @@ const initialValue = {
   channelName: true,
   duration: true,
   thumbnails: true,
-  error: null,
   loader: false,
   data: JSON.parse(localStorage.getItem("data")) || [],
 };
@@ -31,9 +29,8 @@ function App() {
       <Header />
       <Form dispatch={dispatch} state={state} />
       {state.loader && <Loader />}
-      {state.error && <Toast msg={state.error.msg} type={state.error.type} />}
 
-      <DisplayData data={state.data} />
+      <DisplayData data={state.data} dispatch={dispatch} />
     </div>
   );
 }
