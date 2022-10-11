@@ -6,10 +6,6 @@ import "./App.css";
 import Loader from "./Components/Loader";
 
 const initialValue = {
-  description: true,
-  channelName: true,
-  duration: true,
-  thumbnails: true,
   loader: false,
   data: JSON.parse(localStorage.getItem("data")) || [],
 };
