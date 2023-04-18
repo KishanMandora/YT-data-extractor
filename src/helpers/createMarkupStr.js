@@ -40,7 +40,7 @@ const createMarkupStr = (prev, curr) => {
       max,
     },
     description,
-    comments: [commentsStr(comments)],
+    comments: commentsStr(comments),
   };
 
   return prev + JSON.stringify(obj, null, 2);
