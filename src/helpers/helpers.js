@@ -26,7 +26,7 @@ function checkForDuplicate(data, videoId) {
   let flag;
   for (let i = 0; i < data.length; i++) {
     if (data[i].id === videoId) {
-      flag = true;
+      flag = data[i]?.title || true;
       break;
     }
   }

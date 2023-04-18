@@ -16,7 +16,7 @@ function Form({ dispatch, state }) {
 
     if (isDulicate) {
       setInputValue("");
-      return toast(`${inputValue} already in the list`, "info");
+      return toast(`${isDulicate} already in the list`, "info");
     }
 
     const { videoDetailsUrl, commentsUrl } = getUrl(videoId);
