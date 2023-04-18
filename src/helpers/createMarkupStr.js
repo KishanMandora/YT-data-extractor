@@ -1,15 +1,12 @@
 const commentsStr = (comments) =>
   comments.reduce((prev, curr) => {
-    return (
-      prev +
-      `
-  {
-    commentId: "${curr.commentId}",
-    comment: "${curr.comment}"
-  },
-  `
-    );
-  }, ``);
+    const commentObj = {
+      commentId: curr.commentId,
+      comment: curr.comment,
+    };
+
+    return [...prev, commentObj];
+  }, []);
 
 const createMarkupStr = (prev, curr) => {
   const {
@@ -27,29 +24,26 @@ const createMarkupStr = (prev, curr) => {
 
   const { max, standard, high, medium } = thumbnails;
 
-  return (
-    prev +
-    `
-  {
-    id: "${id}",
-    title: "${title}",
-    channelName: "${channelTitle}",
-    channelId:  "${channelId}",
-    duration:  "${duration}",
-    views:  "${views}",
-    likes:  "${likes}",
+  const obj = {
+    id,
+    title,
+    channelName: channelTitle,
+    channelId,
+    duration,
+    views,
+    likes,
     thumbnails: {
-      default:  "${thumbnails.default}",
-      medium:  "${medium}",
-      high:  "${high}",
-      standard:  "${standard}",
-      max:  "${max}",
+      default: thumbnails?.default,
+      medium,
+      high,
+      standard,
+      max,
     },
-    description:  "${description}",
-    comments:[  ${commentsStr(comments)}
-    ]
-  }`
-  );
+    description,
+    comments: [commentsStr(comments)],
+  };
+
+  return prev + JSON.stringify(obj, null, 2);
 };
 
 export { createMarkupStr };
